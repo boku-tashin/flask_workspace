@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計算アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .calculator {
+            margin-top: 50px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            width: 150px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>計算アプリ</h1>
+        <form method="POST">
+            <label for="num1">数字1:</label>
+            <input type="text" name="num1" id="num1" placeholder="数字1を入力">
+            <br><br>
+            <label for="num2">数字2:</label>
+            <input type="text" name="num2" id="num2" placeholder="数字2を入力">
+            <br><br>
+            <button type="submit">計算</button>
+        </form>
+        {% if result is not none %}
+        <h2>結果: {{ result }}</h2>
+        {% endif %}
+    </div>
+</body>
+</html>
