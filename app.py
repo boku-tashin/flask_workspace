@@ -13,6 +13,3 @@ def index():
         except ValueError:
             result = "無効な入力です"
     return render_template("index.html", result=result)
-
-if __name__ == "__main__":
-    app.run(debug=True)
