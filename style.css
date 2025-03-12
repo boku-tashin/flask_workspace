@@ -1,4 +1,11 @@
 /* 全体のスタイル */
+html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #e5ddd5;
@@ -101,3 +108,15 @@ button {
 .chat-box::-webkit-scrollbar {
     display: none;
 }
+
+.container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 768px) {
+    .some-class {
+      padding: 15px;
+      width: 100%;
+    }
+  }
