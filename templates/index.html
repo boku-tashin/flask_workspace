@@ -3,66 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>計算アプリ</title>
+    <title>チャットボット</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        /* 全体のレイアウト */
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f1f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
         }
 
-        .calculator {
-            margin-top: 50px;
-            background-color: white;
+        .chat-container {
+            background-color: #fff;
+            width: 400px;
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        /* チャットボックス */
+        #chatbox {
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            display: inline-block;
+            height: 90%;
+            overflow-y: scroll;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        input {
+        /* メッセージ吹き出し */
+        .message {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .user-message {
+            background-color: #4caf50;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .bot-message {
+            background-color: #e0e0e0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        /* 入力フォーム */
+        .input-container {
+            display: flex;
             padding: 10px;
-            margin: 5px;
-            width: 150px;
-            font-size: 16px;
+            border-top: 1px solid #ddd;
+            background-color: #fff;
         }
 
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        #send-btn {
+            background-color: #4caf50;
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 50%;
             cursor: pointer;
+            font-size: 18px;
         }
 
-        button:hover {
+        #send-btn:hover {
             background-color: #45a049;
         }
 
-        h2 {
-            color: #333;
+        /* スクロール位置を調整 */
+        #chatbox {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h1>計算アプリ</h1>
-        <form method="POST">
-            <label for="num1">数字1:</label>
-            <input type="text" name="num1" id="num1" placeholder="数字1を入力">
-            <br><br>
-            <label for="num2">数字2:</label>
-            <input type="text" name="num2" id="num2" placeholder="数字2を入力">
-            <br><br>
-            <button type="submit">計算</button>
-        </form>
-        {% if result is not none %}
-        <h2>結果: {{ result }}</h2>
-        {% endif %}
+
+    <div class="chat-container">
+        <div id="chatbox">
+            <div class="message bot-message">ボット: こんにちは！質問をどうぞ。</div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="あなたの質問を入力してください..." />
+            <button id="send-btn">➤</button>
+        </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            // 送信ボタンがクリックされたとき
+            $('#send-btn').click(function() {
+                sendMessage();
+            });
+
+            // エンターキーで送信
+            $('#user-input').keypress(function(event) {
+                if (event.which == 13) {  // Enterキーのコードは13
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                var userInput = $('#user-input').val();
+                if (userInput.trim() === "") return;  // 空入力を無視
+
+                // ユーザーのメッセージを表示
+                $('#chatbox').append('<div class="message user-message">あなた: ' + userInput + '</div>');
+                $('#user-input').val('');  // 入力欄をクリア
+
+                // サーバーからのレスポンスを取得
+                $.ajax({
+                    type: "POST",
+                    url: "/get_response",
+                    data: JSON.stringify({ message: userInput }),
+                    contentType: "application/json",
+                    success: function(data) {
+                        $('#chatbox').append('<div class="message bot-message">ボット: ' + data.response + '</div>');
+                        $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);  // スクロールを一番下に
+                    }
+                });
+            }
+        });
+    </script>
+
 </body>
 </html>
