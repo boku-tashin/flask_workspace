@@ -20,15 +20,17 @@ document.addEventListener("DOMContentLoaded", function () {
         appendMessage(userText, "user-message");
         userInput.value = "";
 
-        fetch("/get_response", {
+        fetch("http://127.0.0.1:5000/get_response", {  // サーバーのURLを明記
             method: "POST",
             body: JSON.stringify({ message: userText }),
-            headers: { "Content-Type": "application/json" }
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"  // Acceptヘッダーも追加
+            }
         })
         .then(response => response.json())
         .then(data => appendMessage(data.response, "bot-message"))
         .catch(error => console.error("エラー:", error));
-    }
 
     sendBtn.addEventListener("click", sendMessage);
     
